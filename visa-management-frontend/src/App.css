@@ -1,0 +1,478 @@
+.App {
+  width: 100%;
+  height: 100vh;
+  /* display: flex; */
+  /* background-color: #ebebeb; */
+}
+
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+ }
+
+ .Sidebar {
+  height: 100%;
+  width: 16%;
+  float: left;
+  margin-top: 40px;
+  margin-bottom: 40px;  
+  margin-left:20px;
+  /* margin-right: 20px; */
+  padding-top: 20px; /* Adjust top padding as needed */
+  padding-bottom: 50px; /* Adjust bottom padding as needed */
+  padding-left: 20px; /* Adjust left padding as needed */
+  padding-right: 20px; /* Adjust right padding as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* background-color: #c5fefe; */
+  border-radius: 7px;
+ }
+
+ .SidebarList {
+  height: auto;
+  padding: 0;
+  width: 100%;
+ }
+
+ .SidebarList #active {
+  background-color: #bad6e8;
+ }
+
+ .SidebarList .row {
+  height: 55px;
+  width: 100%;
+  display: flex;
+  color: #29516a;
+  justify-content: center;
+  align-items: center;
+ }
+
+ .SidebarList .row_info {
+  height: 30px;
+  width: 100%;
+  display: flex;
+  color: rgb(16, 16, 16);
+  justify-content: center;
+  align-items: center;
+ }
+
+ .SidebarList .row:hover{
+  cursor: pointer;
+  background-color: #bad6e8;
+ }
+
+  .row #icon{
+    flex: 30%;
+    display: grid;
+    place-items: center;
+  }
+
+  .row #title{
+    flex: 70%;
+  }
+
+
+  .Header {
+    height: 7%;
+    width: 100%;
+    padding-top: 5px; 
+    padding-bottom: 70px; 
+    padding-left: 20px; 
+    padding-right: 20px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* align-items: center; */
+    list-style-type: none;
+    background-color:#E8F8F8;
+   }
+  
+  .Header .logo{
+    width: 50px;
+    height: 15px;
+   }
+   
+  .Header .profile {
+    height: 55px;
+    width: 250px;
+    display: flex;
+    float: right;
+    place-items: end;
+  }
+
+  .profile #icon{
+    flex: 30%;
+    display: grid;
+    place-items: end;
+  }
+
+  .profile #title{
+    flex: 70%;
+  }
+
+  .ContentAreaLogin {
+    height: 590px;
+    width: 100%;
+    max-width: 97%;
+    place-items: center;
+    margin-top: 30px; 
+    margin-left:20px;
+    margin-right: 20px;
+    padding-top: 20px; /* Adjust top padding as needed */
+    padding-bottom: 20px; /* Adjust bottom padding as needed */
+    padding-left: 20px; /* Adjust left padding as needed */
+    padding-right: 20px; /* Adjust right padding as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #b5eeff;
+    /* background-color: #C2FFF3; */
+    overflow: auto;
+    border-radius: 7px;
+    justify-content: center;
+    justify-self: auto;
+   }
+  .ContentArea {
+    height: 590px;
+    width: 100%;
+    max-width: 1205px;
+    float: right;
+    margin-top: 30px; 
+    margin-left:20px;
+    margin-right: 20px;
+    padding-top: 20px; /* Adjust top padding as needed */
+    padding-bottom: 20px; /* Adjust bottom padding as needed */
+    padding-left: 20px; /* Adjust left padding as needed */
+    padding-right: 20px; /* Adjust right padding as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* background-color: #b5eeff; */
+    /* background-color: #C2FFF3; */
+    overflow: auto;
+    border-radius: 7px;
+   }
+
+   .Content-Extension {
+    font-size: 1.75em; /* パンくずリストのフォントサイズ */
+    margin-top: 0.5em;
+    flex-basis: 1000%; /* 初期幅をコンテナの50%に設定 */
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0; /* アイテムが縮小できるように設定 */
+    max-width: calc(50% - 16px);
+    padding: 1rem;
+    text-align: center;
+   }
+
+   .Content-Extension-After {
+    font-size: 1.95em; /* パンくずリストのフォントサイズ */
+    margin-top: 0.5em;
+    flex-basis: 100%; /* 初期幅をコンテナの50%に設定 */
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0; /* アイテムが縮小できるように設定 */
+    max-width: calc(100% - 16px);
+    padding: 10rem;
+    text-align: center;
+   }   
+
+   .Content-Reservation {
+    font-size: 1.75em; /* パンくずリストのフォントサイズ */
+    margin-top: 0.5em;
+    height: 550px;
+    flex-basis: 100%; /* 初期幅をコンテナの50%に設定 */
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0; /* アイテムが縮小できるように設定 */
+    max-width: calc(100% - 16px);
+    padding: 1rem;
+    text-align: center;
+   }
+
+   .Content-Reservation-After{
+    font-size: 1.95em; /* パンくずリストのフォントサイズ */
+    /* margin-top: 0.5em; */
+    flex-basis: 100%; /* 初期幅をコンテナの50%に設定 */
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0; /* アイテムが縮小できるように設定 */
+    max-width: calc(100% - 16px);
+    padding: 2rem;
+    text-align: center;
+   }   
+
+   .Content-Detail-Reservation-After {
+    font-size: 1.25em; /* パンくずリストのフォントサイズ */
+    /* margin-top: 0.5em; */
+    flex-basis: 100%; /* 初期幅をコンテナの50%に設定 */
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0; /* アイテムが縮小できるように設定 */
+    max-width: calc(100% - 16px);
+    padding: 2rem;
+    text-align: center;
+   }
+
+   .calendar-container {
+    /* max-width: 500px; カレンダーの最大幅を設定 */
+    width:100%; /* 親要素に対してフル幅 */
+    /* height: 400px; */
+    height: auto;
+    /* height: 100%; */
+    overflow: auto;
+    margin: 0 auto; /* 水平方向に中央揃え */
+  }
+
+  .fc-header-toolbar {
+    font-size: 0.85em; /* テキストのサイズを小さくする */
+  }
+  
+  .fc .fc-toolbar-title {
+    font-size: 1.2em; /* タイトルのフォントサイズを調整 */
+  }
+  
+  .fc .fc-button {
+    padding: 4px 10px; /* ボタンのパディングを調整 */
+    font-size: 0.8em; /* ボタンのフォントサイズを小さくする */
+  }
+
+  .fc .fc-daygrid-day-number {
+    /* FullCalendarの内部のグリッドサイズを縮小します。 */
+    font-size: 0.7em;
+   }
+
+   .fc .fc-col-header-cell-cushion {
+    /* FullCalendarの内部のグリッドサイズを縮小します。 */
+    font-size: 0.7em;
+   }
+
+   /* 選択された日付のスタイル */
+   .fc .fc-daygrid-day .selected-date {
+    background-color: #e91e63; /* 選択した日付の背景色 */
+  }
+  
+  .reservable-date {
+    background-color: #3ad33f; /* 薄い緑色 */
+    cursor: pointer;
+  }
+  
+  .non-reservable-date {
+    background-color: #c0c0c0fc; /* グレー色 */
+    cursor: not-allowed;
+  }
+  
+  .selected-date {
+    background-color: #e0e0ff; /* 選択された日は薄青色に */
+    color: #000; /* 文字色を黒に */
+  }
+
+  .selected-event {
+    position: relative;
+    top: 20px; /* 位置を下に調整 */
+  }
+
+  .update-form {
+    flex-grow: 1; /* 残りのスペースを使用 */
+    padding: 20px;
+    /* 必要に応じて他のスタイル */
+  }
+  
+  .form-section {
+    /* background-color: #c5fefe; */
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 100%;
+    max-height: 490px;
+    overflow: auto;
+  }
+
+  .form-edit {
+    padding: 20px;
+  }
+
+  .form-label {
+    display: block;
+    /* margin-bottom: 5px; */
+    flex-basis: 30%; /* ラベル部分の幅を決定 */
+    flex-shrink: 0; /* ラベルの幅を固定 */
+    text-align: center;
+    margin-right: 10px; /* ラベルと入力フィールドの間隔 */
+  }
+  .form-field {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .form-edit input{
+    flex-grow: 1;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  .form-edit select{
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  .form-actions {
+    margin-right: 50px;
+    text-align: right; /* これによりボタンが右に配置されます */
+    align-items: center;
+    
+  }
+  .form-actions button {
+    margin-top: 20px;
+    margin-top: 30px;
+    color: azure;
+    border-radius: 5px;
+    width: 90px;
+    background-color: #3f51b5;
+    /* ボタンスタイル */
+  }
+  .dropdown {
+    background-color:  #e3ffff;
+    border-radius: 10px;
+  }
+
+  .popup-overlay {
+    position: fixed; /* 画面全体に固定 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex; /* Flexbox を使用 */
+    justify-content: center; /* 水平方向の中央揃え */
+    align-items: center; /* 垂直方向の中央揃え */
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明の背景 */
+  }
+  
+  .Popup{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #dffffd;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* text-decoration: underline; */
+  }
+  .Popup button{
+    text-align: center;
+    text-decoration: underline;
+  }
+  .Popup .button:hover {
+    text-decoration: underline;
+  }
+
+   .Frontbar {
+    height: 10%;
+    width: 100%;
+    float: right;
+    margin-top: 40px; 
+    margin-left:20px;
+    margin-right: 20px;
+    padding-top: 20px; /* Adjust top padding as needed */
+    padding-bottom: 20px; /* Adjust bottom padding as needed */
+    padding-left: 20px; /* Adjust left padding as needed */
+    padding-right: 20px; /* Adjust right padding as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* background-color:#c5fefe; */
+    border-radius: 7px;
+   }
+
+   .Frontbar h1 {
+    font-size: 1.5em; /* タイトルのフォントサイズ */
+    font-weight: bold; /* フォントの太さ */
+  }
+  .Frontbar .breadcrumb {
+    font-size: 0.95em; /* パンくずリストのフォントサイズ */
+    margin-bottom: 0.01em; /* タイトルとの間隔 */
+    margin-top: -0.3em;  
+  }
+  .link-style {
+    text-decoration: underline; /* 通常時の下線を非表示 */
+  }
+  
+  .link-style:hover {
+    text-decoration: underline; /* ホバー時に下線を表示 */
+  }
+
+  .logout-button {
+    padding: 8px 16px;
+    background-color: #368ff4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 3px; /* 必要に応じてマージンを調整 */
+    width: 90px;
+  }
+  .logout-button:hover {
+    background-color: #b7b9ff;
+  }
+ 
+  .notification-row, .service-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px; /* 行間のマージン調整 */
+  }
+  .service-report-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -80px;
+    margin-bottom: 20px; /* 行間のマージン調整 */
+  }
+  .notification-card, .service-card {
+    padding: 20px;
+    border-radius: 7px;
+    color: white;
+    font-weight: bold;
+    flex-grow: 1;
+    margin-right: 20px; /* カード間のマージン調整 */
+  }
+  
+  .notification-card:last-child, .service-card:last-child {
+    margin-right: 0; /* 最後のカードの右マージンは不要 */
+  }
+  
+  .notification-card.blue {
+    background-color: #007bff; /* 青色の背景 */
+  }
+  
+  .notification-card.green {
+    background-color: #28a745; /* 緑色の背景 */
+  }
+  
+  .service-card {
+    background-color: #ffffff; /* 白色の背景 */
+    color: black; /* テキスト色 */
+    flex-basis: calc(33% - 20px); /* 3つ並べた時の幅 */
+    text-align: center; /* テキストを中央揃え */
+    font-size: medium;
+  }
+  
+  .service-card button {
+    margin-top: 10px; /* ボタンの上のマージン */
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff; /* ボタンの背景色 */
+    color: white;
+    cursor: pointer;
+  }
+  
+  .service-card button:hover {
+    background-color: #0056b3; /* ホバー時のボタンの背景色 */
+  }
+
+
+  

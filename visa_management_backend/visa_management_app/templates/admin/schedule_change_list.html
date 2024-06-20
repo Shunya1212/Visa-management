@@ -1,0 +1,47 @@
+{% extends "admin/change_list.html" %}
+{% block content %}
+<script type="text/javascript">
+    // ここに日程の可否を切り替えるためのJavaScriptコードを記述
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // 時刻を00:00にリセット
+
+        document.querySelectorAll('.date-cell').forEach(function(cell) {
+            const cellDate = new Date(cell.getAttribute('data-date'));
+
+            // 今日以前の日付のセルを削除
+            if (cellDate < today) {
+                cell.remove();
+            }
+        });
+    });
+</script>
+
+<style>
+    /* ここにカレンダースタイルを記述 */
+    .date-cell {
+        display: inline-block;
+        width: 100px;
+        border: 1px solid #ddd;
+        margin: 2px;
+        padding: 5px;
+        text-align: center;
+    }
+    .not-reservable {
+        background-color: #f8d7da;
+    }
+    .reservable {
+        background-color: #d4edda;
+    }
+</style>
+
+<div id="custom-calendar">
+    {% for date in date_list %}
+        {% if date.is_reservable %}
+            <div class="date-cell reservable" data-date="{{ date.date }}" data-available="{{ date.is_reservable }}">
+                {{ date.date|date:"Y-m-d" }} - Reservable
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
