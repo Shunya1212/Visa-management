@@ -7,6 +7,7 @@ import uuid
 from django.core.exceptions import ValidationError
 from datetime import date
 from datetime import datetime
+from django.utils.timezone import now
 import io
 from PyPDF2 import PdfReader, PdfWriter
 from reportlab.lib.pagesizes import A4
@@ -85,8 +86,8 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.name
     
-    def increase_balance(self, amount):
-        if amount > 0:
+    def increase_balance(self):
+        if self.deposit_amount > 0:
             deposit = self.deposit_amount
             self.balance += self.deposit_amount  # 入金額をbalanceに加算
             self.deposit_amount = 0  # 入金後、deposit_amountをリセット
@@ -94,7 +95,7 @@ class UserProfile(models.Model):
             self.record_transaction(deposit)
 
     def pay_token(self,amount):
-        account_number = self.account_number
+        # account_number = self.account_number
         amount = int(amount)
         if self.balance > amount:
             with transaction.atomic():
@@ -124,7 +125,7 @@ class UserProfile(models.Model):
                     
     # saveメソッドをオーバーライドして、deposit_amountをbalanceに加算し、取引を記録
     def save(self, *args, **kwargs):
-        self.increase_balance(self.deposit_amount)
+        self.increase_balance()
         super(UserProfile, self).save(*args, **kwargs)
 
     # 取引履歴を保存するメソッド
@@ -182,9 +183,10 @@ class StudentInfo(models.Model):
     # def fullname(self):
     #     return f"{self.first_name} {self.last_name}"
     
-    # @property
-    # def is_visa_expired(self):
-    #     return self.visa_expire_date < datetime.now()
+    @property
+    def is_visa_expired(self):
+        # return self.visa_expire_date < datetime.now()
+        return self.visa_expire_date and self.visa_expire_date < now().date()
 
     def generate(self):
         print("generate function is called in model.py")
@@ -335,7 +337,7 @@ class StudentInfo(models.Model):
         send_email = EmailMessage(mail_subject, message, from_email=from_email, to=[to_email])
         send_email.send()   
 
-    def send_extension_warn_email(self,student_id):
+    def send_extension_warn_email(self):
         emai_addres = self.email
 
         mail_subject = 'Visa Expiration Notification'
@@ -394,9 +396,9 @@ class Reservation(models.Model):
     is_available = models.BooleanField(default=True)
     reservation_number = models.IntegerField(null=True, blank=True)
 
-    def clean(self):
-        if Reservation.objects.filter(student=self.student, date=self.date).exists():
-            raise ValidationError('この生徒は既にこの日に予約を持っています。')
+    # def clean(self):
+    #     if Reservation.objects.filter(student=self.student, date=self.date).exists():
+    #         raise ValidationError('この生徒は既にこの日に予約を持っています。')
 
     def save(self, *args, **kwargs):
 
@@ -420,45 +422,20 @@ class Schedule(models.Model):
     date = models.DateField(unique=True)
     is_reservable = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        # 今日以前の日付の場合、is_reservableをFalseに設定
-        if self.date < date.today():
-            self.is_reservable = False
-        # 親クラスのsaveメソッドを呼び出して保存処理を実行
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # 今日以前の日付の場合、is_reservableをFalseに設定
+    #     if self.date < date.today():
+    #         self.is_reservable = False
+    #     # 親クラスのsaveメソッドを呼び出して保存処理を実行
+    #     super().save(*args, **kwargs)
 
     @classmethod
     def update_past_reservable(cls):
+        cls.objects.filter(date__lt=date.today(), is_reservable=True).update(is_reservable=False) 
+        
         # """
         # 今日以前のis_reservableをFalseに設定
         # """
-        cls.objects.filter(date__lt=date.today(), is_reservable=True).update(is_reservable=False)    
-    
-    def search_reservable_date(self):
-        year = datetime.now().year
-        month = datetime.now().month
-        last_day = calendar.monthrange(year, month)
-
-        # 月内のすべての日についてリストを作成
-        date_list = [{'date': datetime(year, month, day).date()} for day in range(1, last_day + 1)]
-
-        # 予約可能な日付をデータベースから取得
-        reservable_dates = Schedule.objects.filter(
-            date__year=year,
-            date__month=month,
-            is_reservable=True
-        ).values_list('date', flat=True)
-
-        # 日付のリストを更新して、予約可能な日付をマークする
-        for date_dict in date_list:
-            date_obj = date_dict['date']
-            date_dict['is_reservable'] = date_obj in reservable_dates
-
-        return date_list
-        # テンプレートに渡すためのコンテキストを作成
-        # context = {'date_list': date_list}
-        # return context
-        # render(request, 'admin/visa_management_app/schedule_change_list.html', context)
 
 
     def __str__(self):

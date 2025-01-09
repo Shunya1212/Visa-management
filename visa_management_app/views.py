@@ -40,10 +40,6 @@ class Reservable_datesViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = Reservable_datesSerializer
 
-# class ReservableView(generics.CreateAPIView):
-#     queryset = Reservation.objects.all()
-#     serializer = Reservable_datesSerializer
-
 class StudentInfoViewSet(viewsets.ModelViewSet):
     queryset = StudentInfo.objects.all()
     serializer_class = StudentInfoSerializer
@@ -79,19 +75,37 @@ class UserProfileViewSet(generics.RetrieveAPIView):
 #         serializer = UserProfileSerializer(user)
 #         return Response(serializer.data)
 
-# class TransactionViewSet(APIView):
-#     def get(self, request, account_number):
-#         user = UserProfile.objects.get(account_number=account_number)
-#         transactions = Transaction.objects.filter(user=user)
-#         serializer = TransactionSerializer(transactions, many=True)
-#         return Response(serializer.data)
 
 # GET /transaction/
 # GET /transaction/<id>/
 
-class TransactionView(viewsets.ReadOnlyModelViewSet):
-    quesryset = Transaction.objects.all()
-    serializer = TransactionSerializer
+
+# class TransactionView(viewsets.ReadOnlyModelViewSet):
+#     queryset = Transaction.objects.all()
+#     serializer_class = TransactionSerializer
+#     lookup_field = 'user__account_number'
+
+    # def get_queryset(self):
+    #     # account_number = self.request.query_params.get('account_number')  # クエリパラメータから取得
+    #     # if account_number:
+    #     #     return Transaction.objects.filter(user__account_number=account_number)
+    #     # return Transaction.objects.none() 
+    #     account_number = self.kwargs.get('user__account_number', None)
+    #     return Transaction.objects.filter(user__account_number=account_number)
+
+    # def get_object(self):
+    #     print(self.kwargs)
+    #     #obj = Transaction.objects.get(user__account_number=....)
+    #     return Transaction.objects.filter(
+    #         user__account_number=self.kwargs.get('user__account_number', None)
+    #     ).all()
+
+    # def get_queryset(self):
+    #     account_number = self.kwargs.get('user__account_number')  # URLから取得
+    #     if account_number:
+    #         return Transaction.objects.filter(user__account_number=account_number)
+    #     return Transaction.objects.none()
+    
 
 # # generic is for create retrieve update delete
 class UserProfileView(generics.RetrieveAPIView):
@@ -110,9 +124,9 @@ class UserProfileView(generics.RetrieveAPIView):
 #     queryset = RequestLetter.objects.all() 
 #     serializer_class = RequestVisaExtensionSerializer
 
-class RequestVisaExtensionView(generics.CreateAPIView):
-    queryset = RequestLetter.objects.all()
-    serializer_class = RequestVisaExtensionSerializer
+# class RequestVisaExtensionView(generics.CreateAPIView):
+#     queryset = RequestLetter.objects.all()
+#     serializer_class = RequestVisaExtensionSerializer
 
     # def get(self, request, student_id):
     #     student = StudentInfo.objects.get(student_id=student_id)
@@ -171,17 +185,38 @@ class SendEmailExtensionNotification(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-class ScheduleView(APIView):
-    def get(self, request):
-        schedule = Schedule.objects.get()
+class PayToken(APIView):
+    def post(self,request,account_number):
+        user = UserProfile.objects.get(account_number=account_number)
+        amount = request.data.get('amount')
         try:
-            date_list = schedule.search_reservable_date()
-            context = {'date_list': date_list}
-            render(request, 'admin/visa_management_app/schedule_change_list.html', context)
-
-            return Response({"message": "Email sent successfully."}, status=status.HTTP_200_OK)
+            user.pay_token(amount)
+            return Response({"message": "Payment successful."}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class SpecificTransactionList(APIView):
+    def get(self, request, account_number):
+        user = UserProfile.objects.get(account_number=account_number)
+        transactions = Transaction.objects.filter(user=user)
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data)
+    
+# class ScheduleView(APIView):
+#     def get(self, request):
+#         schedule = Schedule.objects.get()
+#         try:
+#             date_list = schedule.search_reservable_date()
+#             context = {'date_list': date_list}
+#             render(request, 'admin/visa_management_app/schedule_change_list.html', context)
+
+#             return Response({"message": "Email sent successfully."}, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+# class pay_tokenView(APIView):
+#     def get(self, )        
 
 # class LoginStudent(APIView):
 #     def post(self,request):
@@ -366,30 +401,30 @@ class LogoutStudent(APIView):
 #     schedule.save()
 #     return JsonResponse({'status': 'success', 'is_reservable': schedule.is_reservable})
 
-def schedule_view(request):
-    # 現在の年と月を取得する（またはフロントエンドから選択された月）
-    year = datetime.now().year
-    month = datetime.now().month
-    last_day = calendar.monthrange(year, month)
+# def schedule_view(request):
+#     # 現在の年と月を取得する（またはフロントエンドから選択された月）
+#     year = datetime.now().year
+#     month = datetime.now().month
+#     last_day = calendar.monthrange(year, month)
 
-    # 月内のすべての日についてリストを作成
-    date_list = [{'date': datetime(year, month, day).date()} for day in range(1, last_day + 1)]
+#     # 月内のすべての日についてリストを作成
+#     date_list = [{'date': datetime(year, month, day).date()} for day in range(1, last_day + 1)]
 
-    # 予約可能な日付をデータベースから取得
-    reservable_dates = Schedule.objects.filter(
-        date__year=year,
-        date__month=month,
-        is_reservable=True
-    ).values_list('date', flat=True)
+#     # 予約可能な日付をデータベースから取得
+#     reservable_dates = Schedule.objects.filter(
+#         date__year=year,
+#         date__month=month,
+#         is_reservable=True
+#     ).values_list('date', flat=True)
 
-    # 日付のリストを更新して、予約可能な日付をマークする
-    for date_dict in date_list:
-        date_obj = date_dict['date']
-        date_dict['is_reservable'] = date_obj in reservable_dates
+#     # 日付のリストを更新して、予約可能な日付をマークする
+#     for date_dict in date_list:
+#         date_obj = date_dict['date']
+#         date_dict['is_reservable'] = date_obj in reservable_dates
 
-    # テンプレートに渡すためのコンテキストを作成
-    context = {'date_list': date_list}
-    return render(request, 'admin/visa_management_app/schedule_change_list.html', context)
+#     # テンプレートに渡すためのコンテキストを作成
+#     context = {'date_list': date_list}
+#     return render(request, 'admin/visa_management_app/schedule_change_list.html', context)
 
 
 @api_view(['POST'])

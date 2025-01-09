@@ -5,6 +5,7 @@ from .models import StudentInfo,Reservation,Schedule,RequestLetter,Transaction,U
 class StudentInfoSerializer(serializers.ModelSerializer):
     # student_fullname = serializers.CharField(source='fullname', read_only=True)
     # is_visa_expired = serializers.BooleanField(read_only=True)
+    is_visa_expired = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = StudentInfo
@@ -40,7 +41,8 @@ class RequestVisaExtensionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RequestLetter
-        fields = ['student', 'is_requested']
+        # fields = ['student', 'is_requested']
+        fields = '__all__'  
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,4 +52,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ['transaction_date', 'amount', 'service','is_deposit']
+        fields = '__all__' 
