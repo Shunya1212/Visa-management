@@ -23,6 +23,7 @@ function App() {
   // const [fullname, setfullname] = useState('');
   const [password, setPassword] = useState('');
   const [studentId, setStudent_id] = useState( localStorage.getItem('student_id') || '');
+  // const [studentId, setStudent_id] = useState();
   const [login, setLogin] = useState(false);
   const [students, setStudents] = useState([]);
   // const navigate = useNavigate();
@@ -82,6 +83,7 @@ function App() {
         setUsername(data.username);
         setLogin(true);
         setStudent_id(data.student_id)
+        console.log(studentId)
         // console.log(studentId)
     } else {
         alert(data.message);
@@ -94,6 +96,7 @@ function App() {
     if (isLogged === 'true') {
       setLogin(true);
       console.log(username)
+      console.log(studentId)
     }
   }, []);
 
@@ -110,8 +113,10 @@ function App() {
     if (studentId) { // studentIdが空でないことを確認
       const fetchStudentInfo = async () => {
         try {
+          console.log(studentId)
           const response = await axios.get(`http://127.0.0.1:8000/StudentInfo/?student_id=${studentId}`);
           setStudents(response.data);
+          
         } catch (error) {
           console.error('Error fetching student info:', error);
           // エラー処理を適宜実装してください
@@ -135,8 +140,40 @@ function App() {
     <div className="App h-screen w-full"> {/* 画面全体をカバー */}
     {!login ? (
       <>
-    <Header />
-    <div className='ContentAreaLogin w-full'>
+    {/* <Header /> */}
+
+    <div className="container">
+      <div className="wrapper">
+ 
+        <div className="title">
+          <span>Welcome back</span>
+        </div>
+        <p className='title_para'>Please enter your details to login.</p>
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+            <input type="text" 
+            placeholder="Enter your username..." 
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required/>
+          </div>
+          <div className="row">
+            <input type="password" 
+            placeholder="Password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required />
+          </div>
+          {/* <div className="pass"><a href="#">Forgot password?</a></div> */}
+          <div className="row button">
+            <input type="submit" value="Login" />
+          </div>
+          {/* <div className="signup-link">Not a member? <a href="#">Signup now</a></div> */}
+        </form>
+      </div>
+    </div>
+
+    {/* <div className='ContentAreaLogin w-full'>
       <form onSubmit={handleSubmit}>
       <div className="form-field">
         <label className="form-label">
@@ -162,7 +199,7 @@ function App() {
 
       <div className="form-actions">
       <button type="submit">Login</button>
-      </div>
+      </div> */}
 
       {/* <div>
       {students.map(student => (
@@ -170,9 +207,9 @@ function App() {
       ))}
     </div> */}
       
-    </form>
-  </div>
-  </>
+    {/* </form> */}
+  {/* </div> */}
+  // </>
   ) : (
     <>
     <Header student={students.map(student => (
@@ -186,7 +223,7 @@ function App() {
       ))} />
       <div className='flex flex-col w-4/5'>  
         <BrowserRouter>
-        <Frontbar />
+        <Frontbar studentId={studentId} />
             <Routes>
               {/* <Route path={`/`} element={<Default/>} /> */}
               <Route path={`/Login/`} element={<Login/>} /> 
@@ -197,7 +234,7 @@ function App() {
               <Route path={`/update_profile/`} element={<Profile studentId={studentId}/>} />
               <Route path={`/van_reservation/`} element={<VanReservation studentId={studentId}/>} />
               <Route path={`/van_reservation/van_reservation_status`} element={<AfterVanReservation studentId={studentId}/>} />
-              <Route path={`/token/`} element={<Token />} />
+              <Route path={`/token/`} element={<Token studentId={studentId}/>} />
               <Route path={`/*/`} element={<NotFound />} />
             </Routes>
         </BrowserRouter>

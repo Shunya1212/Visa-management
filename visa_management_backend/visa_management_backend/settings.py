@@ -28,6 +28,9 @@ DEBUG = True
 # ALLOWED_HOSTS = ['http://localhost:8000','http://127.0.0.1:8000']
 ALLOWED_HOSTS = ["*"]
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # ReactアプリのURL
 ]
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
 ]
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -151,3 +155,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = '8291653cd288c9'
+EMAIL_HOST_PASSWORD = '4686a74b16242a'
+DEFAULT_FROM_EMAIL = 'admin@gmail.com'
+EMAIL_USE_TLS = True

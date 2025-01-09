@@ -342,26 +342,24 @@
   }
 
   .popup-overlay {
-    position: fixed; /* 画面全体に固定 */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: flex; /* Flexbox を使用 */
-    justify-content: center; /* 水平方向の中央揃え */
-    align-items: center; /* 垂直方向の中央揃え */
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明の背景 */
+    background: rgba(0, 0, 0, 0.5); /* 背景の半透明 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* 前面に表示する */
   }
   
-  .Popup{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #dffffd;
+  .Popup {
+    background: white;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    /* text-decoration: underline; */
+    border-radius: 5px;
+    text-align: center;
+    z-index: 1001; /* カレンダーより上に表示 */
   }
   .Popup button{
     text-align: center;
@@ -382,13 +380,24 @@
     padding-bottom: 20px; /* Adjust bottom padding as needed */
     padding-left: 20px; /* Adjust left padding as needed */
     padding-right: 20px; /* Adjust right padding as needed */
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     justify-content: space-between;
-    /* background-color:#c5fefe; */
+    align-items:flex-start;
     border-radius: 7px;
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Adjust column sizes */
+    gap: 1rem; /* Add space between columns */
    }
-
+   
+   .flex-1 {
+    flex-grow: 1; /* This ensures the breadcrumb and content take available space */
+  }
+  
+  .ml-4 {
+    margin-top: -40px; 
+    margin-left: 1rem; /* Adjust the spacing to keep Stepper away from breadcrumb/content */
+  }
    .Frontbar h1 {
     font-size: 1.5em; /* タイトルのフォントサイズ */
     font-weight: bold; /* フォントの太さ */
@@ -449,7 +458,11 @@
   }
   
   .notification-card.green {
-    background-color: #28a745; /* 緑色の背景 */
+    background-color: #27cf4e; /* 緑色の背景 */
+  }
+
+  .notification-card.lighblue {
+    background-color: #27abcf; /* 緑色の背景 */
   }
   
   .service-card {
@@ -473,6 +486,529 @@
   .service-card button:hover {
     background-color: #0056b3; /* ホバー時のボタンの背景色 */
   }
-
+  
+  h2, h3, h4 {
+    color: #005f9e;
+  }
+  
 
   
+  .actions {
+    display: flex;
+    justify-content: center;  /* 横方向の中央揃え */
+    align-items: center;      /* 縦方向の中央揃え */
+    gap: 350px;    
+    margin-top: 0px; 
+    margin-bottom: 60px;               /* ボタン間のスペースを追加 */
+  }
+  
+  .actions button {
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 220px;             /* ボタンの幅を揃える */
+  }
+  
+  .actions button:hover {
+    background-color: #45a049;
+  }
+
+  .account-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    /* padding-bottom: 10px; */
+    /* margin-bottom: 15px; */
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .account-header {
+    color: #666;
+  }
+  
+  .account-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .account-number {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .balance p {
+    font-size: 32px;
+    font-weight: bold;
+    justify-content: center; 
+    margin-right: 150px; 
+    color: #333;
+  }
+  
+  /* 取引履歴セクション */
+  /* .transaction-section {
+    margin-top: 15px;
+  }
+  
+  .transactions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .transaction-item {
+    display: flex;
+    justify-content: flex-start;
+    gap: 80px;
+    margin-bottom: 20px;
+    margin-left: 50px;
+  }
+  
+  .transaction-date {
+    font-size: 17px;
+    color: #000000;
+  }
+  
+  .transaction-amount {
+    font-size: 17px;
+    font-weight: bold;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .transaction-amount.positive {
+    color: #4CAF50;
+  }
+  
+  .transaction-amount.negative {
+    color: #F44336;
+  } */
+
+  .transaction-section {
+    display: flex;
+    flex-direction: column; /* 取引履歴を縦に並べる */
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+    padding-top: 0;
+    align-self: flex-start;
+    
+  }
+  
+  .transactions-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-direction: column-reverse;
+  }
+  
+  .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .transaction-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .transaction-date, .transaction-from, .transaction-to, .transaction-service, .transaction-amount {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .transaction-date {
+    text-align: left;
+  }
+  
+  .transaction-from, .transaction-to, .transaction-service {
+    text-align: center;
+  }
+  
+  .transaction-amount {
+    text-align: right;
+  }
+  
+  .transaction-amount.positive {
+    color: green;
+  }
+  
+  .transaction-amount.negative {
+    color: red;
+  }
+  
+
+  .step-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 9rem; /* Equivalent to w-36 (36 * 0.25rem = 9rem) */
+}
+
+.step-item:not(:first-child):before {
+  content: '';
+  background-color: #e2e8f0; /* Equivalent to bg-slate-200 */
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  right: 50%; /* Equivalent to right-2/4 */
+  top: 33.33%; /* Adjust the percentage to align with top-1/3 */
+  transform: translateY(-50%); /* Equivalent to -translate-y-2/4 */
+}
+
+.step {
+  width: 2.5rem; /* Equivalent to w-10 (10 * 0.25rem = 2.5rem) */
+  height: 2.5rem; /* Equivalent to h-10 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  position: relative;
+  background-color: #334155; /* Equivalent to bg-slate-700 */
+  border-radius: 9999px; /* Equivalent to rounded-full */
+  font-weight: 600; /* Equivalent to font-semibold */
+  color: #fff; /* Equivalent to text-white */
+}
+
+.active .step {
+  background-color: #0284c7; /* Equivalent to bg-sky-600 */
+}
+
+.complete .step {
+  background-color: #16a34a; /* Equivalent to bg-green-600 */
+}
+
+.complete p {
+  color: #fff; /* Equivalent to text-white */
+}
+
+.complete:not(:first-child):before,
+.active:not(:first-child):before {
+  background-color: #16a34a; /* Equivalent to bg-green-600 */
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+ 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+ 
+body {
+  background: #ffffff;
+  overflow: hidden;
+}
+ 
+::selection {
+  background: rgba(26, 188, 156, 0.3);
+}
+ 
+.container {
+  max-width: 440px;
+  padding: 0 20px;
+  margin: 170px auto;
+}
+ 
+.wrapper {
+  width: 100%;
+  background: #fff;
+  border-radius: 5px;
+  /* box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.1); */
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+ 
+.wrapper .title {
+  height: 90px;
+  background: #ffffff;
+  border-radius: 5px 5px 0 0;
+  color: #151515;
+  font-size: 25px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.title_para {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  bottom: 22px;
+  color: #7e7e7e;
+}
+ 
+.wrapper form {
+  padding: 10px 25px 34px 25px;
+}
+ 
+.wrapper form .row {
+  height: 56px;
+  margin-bottom: 15px;
+  position: relative;
+}
+ 
+.wrapper form .row input {
+  height: 100%;
+  width: 100%;
+  outline: none;
+  padding-left: 20px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+ 
+form .row input:focus {
+  border-color: #16a085;
+  box-shadow: inset 0px 0px 2px 2px rgba(26, 188, 156, 0.25);
+}
+ 
+form .row input::placeholder {
+  color: #999;
+}
+ 
+.wrapper form .row i {
+  position: absolute;
+  width: 47px;
+  height: 100%;
+  color: #fff;
+  font-size: 18px;
+  background: #16a085;
+  border: 1px solid #16a085;
+  border-radius: 5px 0 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wrapper form .button input {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+  padding-left: 0px;
+  background: #242526;
+  border: 1px solid #141414;
+  cursor: pointer;
+}
+ 
+form .button input:hover {
+  background: #090909;
+}
+
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10%;
+  margin-top: 20px;
+}
+
+.card-wrapper2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3%;
+  margin-top: 20px;
+}
+
+.card3-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5%;
+  margin-top: 20px;
+}
+
+/* CardのCSS */
+.card {
+  width: 350px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+.card2 {
+  width: 240px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+.card3 {
+  width: 300px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card .popular {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff6347;
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.card h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.card .action {
+  font-size: 36px;
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+.card .duration {
+  font-size: 16px;
+  color: #555;
+}
+
+.card .advantages {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.card .advantages li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+
+.card2:hover {
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card2 .popular {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff6347;
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.card2 h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.card2 .action {
+  font-size: 30px;
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+.card2 .title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+.card2 .duration {
+  font-size: 16px;
+  color: #555;
+}
+
+.card2 .advantages {
+  list-style: none;
+  padding: 0;
+  /* margin-bottom: 20px; */
+  text-align: left;
+}
+
+.card2 .advantages li {
+  /* margin-bottom: 10px; */
+  font-size: 16px;
+}
+
+.card3:hover {
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card3 .popular {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff6347;
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.card3 h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.card3 .action {
+  font-size: 36px;
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+.card3 .duration {
+  font-size: 16px;
+  color: #555;
+}
+
+.card3 .advantages {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.card3 .advantages li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+/* モバイル向け */
+@media (max-width: 768px) {
+  .card {
+    width: 250px;
+  }
+}

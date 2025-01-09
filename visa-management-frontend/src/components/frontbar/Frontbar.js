@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import Stepper from '../pages/Progressbar';
 
-function Frontbar() {
+function Frontbar({studentId}) {
   const location = useLocation();
 
   let content;
@@ -76,10 +77,16 @@ function Frontbar() {
   }
 
   return (
-    <div className="Frontbar">
+  <div className="Frontbar grid grid-cols-2 gap-4"> {/* Add flex for horizontal layout */}
+    <div className="flex-1"> {/* Ensure breadcrumb and content take full width */}
       {breadcrumb}
       {content}
     </div>
+    <div className="ml-4"> {/* Add some margin to the Stepper */}
+      {/* <Stepper studentId={studentId}/> */}
+    </div>
+  </div>
+    
   );
 }
 

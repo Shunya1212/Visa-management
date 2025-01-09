@@ -5,6 +5,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import axios from 'axios'; 
+import Popup from '../popups/Popup';
 
 const theme = {
   blue: {
@@ -18,20 +19,23 @@ const theme = {
 };
 
 const Button = styled.button`
-  background-color: ${props => theme[props.theme && theme[props.theme] ? props.theme : 'blue'].default};
+  background-color: ${props =>
+    theme[props.theme && theme[props.theme] ? props.theme : 'blue'].default};
   color: white;
-  padding: 5px 15px;
-  border-radius: 5px;
+  padding: 3px 10px; /* 内側の余白を小さく設定 */
+  border-radius: 4px; /* 角丸を少し減らす */
   outline: 0;
   border: 0;
   text-transform: uppercase;
-  margin: 10px auto; /* 上下のマージンを指定し、左右のマージンを自動に設定して中央揃え */
+  margin: 5px auto; /* マージンを小さく */
   cursor: pointer;
   transition: ease background-color 250ms;
-  width: 20%; /* 横幅を50%に指定 */
+  width: 15%; /* 横幅を小さく設定 */
+  font-size: 1.0rem; /* フォントサイズを小さく */
   display: block; /* ブロック要素として表示 */
   &:hover {
-    background-color: ${props => theme[props.theme && theme[props.theme] ? props.theme : 'blue'].hover};
+    background-color: ${props =>
+      theme[props.theme && theme[props.theme] ? props.theme : 'blue'].hover};
   }
   &:disabled {
     cursor: default;
@@ -46,6 +50,16 @@ const [selectedDate, setSelectedDate] = useState(null);
 const [reservableDates, setReservableDates] = useState([{ date: null, is_reservable: false }]);
 const [events, setEvents] = useState([]);
 const [eventState, seteventState] = useState("Available");
+const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+const [showPopup, setShowPopup] = useState(false);
+const [popupMessage, setPopupMessage] = useState('');
+const [popupButtonText, setPopupButtonText] = useState('');
+const [popupRedirectPath, setPopupRedirectPath] = useState('');
+  
+  const handlePopupClose = () => {
+    setShowPopup(false); // ポップアップを非表示にする
+  };
 
 useEffect(() => {
   axios.get('http://127.0.0.1:8000/Reservable_dates/')
@@ -93,13 +107,40 @@ const handleDateClick = (arg) => {
       ];
     });
   } else {
-    alert('This date is not reservable. Please choose another date.');
+    // alert('This date is not reservable. Please choose another date.');
+    setPopupMessage('This date is not reservable. Please choose another date.');
+    setPopupButtonText('Close');
+    setPopupRedirectPath('');
+    setShowPopup(true);
   }
 };
 
 
 // "Reserve" ボタンがクリックされたときの処理
 const handleReserveClick = async () => {
+
+  const Student_response = await axios.get(`http://127.0.0.1:8000/StudentInfo/?student_id=${studentId}`);
+      const studentData = Student_response.data[0];
+
+      const visaExpireDateString = studentData.visa_expire_date;
+      const reportDateString = studentData.report_90_days_date;
+
+      const visa_expire_date = new Date(Date.parse(visaExpireDateString));
+      const report_90_days_date = new Date(Date.parse(reportDateString))
+      
+      const currentDate = new Date();
+      const VisadaysDifference = Math.floor((visa_expire_date - currentDate) / (1000 * 3600 * 24));
+      const ReportdaysDifference = Math.floor((report_90_days_date - currentDate) / (1000 * 3600 * 24));
+
+      if (VisadaysDifference > 30 && ReportdaysDifference > 7) {
+        // alert("Too early to apply, try again before 30 days of visa expire date or 7 days of 90 days report date");
+        setPopupMessage('Too early to apply, try again before 30 days of visa expire date or 7 days of 90 days report date');
+        setPopupButtonText('Close');
+        setPopupRedirectPath('');
+        setShowPopup(true);
+        setIsButtonDisabled(true); // ボタンを無効化
+        return;
+      }
 
   const student_id =  studentId
   if (selectedDate) {
@@ -111,19 +152,52 @@ const handleReserveClick = async () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ selectedDate, studentId }),
+        body: JSON.stringify({ date: selectedDate, student: studentId }),
     });
+
+    if (!response.ok) {
+      // サーバーからエラーが返された場合
+      const errorData = await response.json();
+      console.error('Reservation error:', errorData.error);
+      // alert(`Reservation failed: ${errorData.error}`);
+      setPopupMessage('Reservation faild, Check your email you already requested!');
+      setPopupButtonText('Close');
+      setPopupRedirectPath('');
+      setShowPopup(true);
+      return;
+    }
       const data = await response.json();
       console.log(data); // 予約成功の応答を確認
-      alert('Reservation successful!');
-      navigate('van_reservation_status'); // 成功した後のナビゲーション
+      // alert('Reservation successful!');
+      setPopupMessage('Reservation successful!');
+      setPopupButtonText('Next');
+      setPopupRedirectPath('van_reservation_status');
+      setShowPopup(true);
+      // navigate('van_reservation_status'); // 成功した後のナビゲーション
+
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/reservation_email/${studentId}/`);
+        const data = response.data;
+        console.log(data); // 予約成功の応答を確認
+      } catch (error) {
+        console.error('Reservation email failed:', error);
+        // alert('Reservation email failed to sent. Please try again.');
+      }
+
     } catch (error) {
       console.error('Reservation failed:', error);
-      alert('Reservation failed. Please try again.');
+      // alert('Reservation failed. Please try again.');
+      setPopupMessage('Reservation failed. Please try again.');
+      setPopupButtonText('Close');
+      setPopupRedirectPath('');
+      setShowPopup(true);
     }
   } else {
-    // ユーザーに日付を選択させる
-    alert('Please select a date first.');
+    // alert('Please select a date first.');
+    setPopupMessage('Please select a date first.');
+    setPopupButtonText('Close');
+    setPopupRedirectPath('');
+    setShowPopup(true);
   }
 };
 
@@ -136,6 +210,12 @@ const handleReserveClick = async () => {
         </div>
         <Button  variant="contained" color="success" onClick={handleReserveClick}>Reserve</Button>
         </div>
+        {showPopup && <Popup 
+    message={popupMessage} // 動的なメッセージ
+    buttonText={popupButtonText} // 動的なボタンテキスト
+    redirectPath={popupRedirectPath} // 動的な遷移パス
+    onClose={handlePopupClose}
+    />}
     </div>
   );
 }

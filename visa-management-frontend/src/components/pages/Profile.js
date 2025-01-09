@@ -8,7 +8,7 @@ function Profile({studentId}) {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
   const [formData, setFormData] = useState({
-    name: '',
+    // name: '',
     // student_id:'',
     birth: '',
     sex: '',
@@ -18,12 +18,21 @@ function Profile({studentId}) {
     tambol: '',
     amphoe: '',
     province: '',
-    passportNumber: '',
+    birthday:'',
+    place_of_birth:'',
+    passport_number: '',
     visaType: '',
     visa_expire_date: '',
-    passportIssueDate: '',
-    passportExpireDate: '',
+    passport_issue_date: '',
+    passport_expiration_date: '',
+    passport_issue_place:'',
+    arrival_transportation_type:'',
+    arrival_from:'',
+    port_of_arrival:'',
+    arrival_date:'',
+    tm6_no:'',
     report_90_days_date: '',
+    email:'',
   });
 
   // useEffect(() => {
@@ -77,11 +86,11 @@ function Profile({studentId}) {
     }
     else if (selectedOption === 'new-passport') {
       // Visa Extensionの場合、名前と性別以外を無効化
-      return !['name', 'sex','nationality','passport','visa_expire_date','passport-issue','passport-expire','report-date'].includes(fieldName);
+      return !['name', 'sex','nationality','passport_number','visa_expire_date','passport-issue','passport-expire','report-date'].includes(fieldName);
     }
-    else if (selectedOption === 'other') {
+    else if (selectedOption === 'register-info') {
       // Visa Extensionの場合、名前と性別以外を無効化
-      return !['name', 'sex','nationality','address_no','road','tambol','amphoe','province','passport','visa_expire_date','passport-issue','passport-expire','report-date'].includes(fieldName);
+      return !['sex','nationality','address_no','road','tambol','amphoe','province','birthday','birth','passport_number','visa_expire_date','passport-issue','passport-expire','passport-place','transportation','arrival_from','port_of_arrival','arrival_date','tm6_no','report-date','email'].includes(fieldName);
     }
     // 他のオプションではすべてのフィールドが編集可能
     return false;
@@ -101,6 +110,18 @@ function Profile({studentId}) {
     }
   };
 
+  const handlesexChange = (event) => {
+    const { name, value } = event.target;
+    // Convert 'male' and 'female' to 'M' and 'F'
+    const mappedValue = name === 'sex' ? (value === 'male' ? 'M' : value === 'female' ? 'F' : '') : value;
+    setFormData({ ...formData, [name]: mappedValue });
+};
+
+const handletransportChange = (event) => {
+  const { name, value } = event.target;
+  setFormData({ ...formData, [name]: value }); // 値をそのまま設定
+};
+
   return (
     <div className='ContentArea'>
       <h1>Update Profile</h1>
@@ -116,7 +137,7 @@ function Profile({studentId}) {
           <option value="visa-extension">Visa Extension</option>
           <option value="90-days-report">90 days report</option>
           <option value="new-passport">New Passport</option>
-          <option value="other">Other</option>
+          <option value="register-info">Register-info</option>
 
         </select>
         {selectedOption && (
@@ -127,7 +148,7 @@ function Profile({studentId}) {
           </div>
           <div className="form-field">
             <label className="form-label">Sex</label>
-            <select name="sex" value={formData.sex} onChange={handleInputChange} disabled={isFieldDisabled('sex')} >
+            <select name="sex"  value={formData.sex === 'M' ? 'male' : formData.sex === 'F' ? 'female' : ''} onChange={handlesexChange} disabled={isFieldDisabled('sex')} >
             <option value="" >Select Sex</option>
             <option value="male">Male</option>
             <option value="female">Femele</option>
@@ -158,8 +179,16 @@ function Profile({studentId}) {
             <input type="text" name="province" value={formData.province} onChange={handleInputChange} placeholder="province" disabled={isFieldDisabled('province')} />
           </div> 
           <div className="form-field">
+            <label className="form-label">birthday</label>
+            <input className="form-input" type="date" name="birthday" value={formData.birthday} onChange={handleInputChange} disabled={isFieldDisabled('birthday')} />
+          </div>
+          <div className="form-field">
+            <label className="form-label">place_of_birth</label>
+            <input type="text" name="place_of_birth" value={formData.place_of_birth} onChange={handleInputChange} placeholder="place of birth" disabled={isFieldDisabled('birth')} />
+          </div> 
+          <div className="form-field">
             <label className="form-label">Passport No</label>
-            <input type="text" name="passportNumber" value={formData.passportNumber} onChange={handleInputChange} placeholder="Passport No" disabled={isFieldDisabled('passport')} />
+            <input type="text" name="passport_number" value={formData.passport_number} onChange={handleInputChange} placeholder="Passport No" disabled={isFieldDisabled('passport_number')} />
           </div> 
           {/* <div className="form-field">
             <label className="form-label">Visa Type</label>
@@ -177,15 +206,53 @@ function Profile({studentId}) {
           </div>
           <div className="form-field">
             <label className="form-label">Passport Issue Date</label>
-            <input className="form-input" type="date" name="passportIssueDate" value={formData.passportIssueDate} onChange={handleInputChange} disabled={isFieldDisabled('passport-issue')} />
+            <input className="form-input" type="date" name="passport_issue_date" value={formData.passport_issue_date} onChange={handleInputChange} disabled={isFieldDisabled('passport-issue')} />
           </div>
           <div className="form-field">
             <label className="form-label">Passport Expire Date</label>
-            <input className="form-input" type="date" name="passportExpireDate" value={formData.passportExpireDate} onChange={handleInputChange} disabled={isFieldDisabled('passport-expire')} />
+            <input className="form-input" type="date" name="passport_expiration_date" value={formData.passport_expiration_date} onChange={handleInputChange} disabled={isFieldDisabled('passport-expire')} />
+          </div>
+          <div className="form-field">
+            <label className="form-label">passport_issue_place</label>
+            <input type="text" name="passport_issue_place" value={formData.passport_issue_place} onChange={handleInputChange} placeholder="passport issue place" disabled={isFieldDisabled('passport-place')} />
+          </div>
+          <div className="form-field">
+            <label className="form-label">arrival_transportation_type</label>
+            <select
+              name="arrival_transportation_type"
+              value={formData.arrival_transportation_type} // 値をそのまま利用
+              onChange={handletransportChange}
+              disabled={isFieldDisabled('transportation')}
+            >
+              <option value="">Select transportation</option>
+              <option value="AIR">Airplane</option>
+              <option value="SEA">Sea</option>
+              <option value="LAND">Land</option>
+            </select>
+          </div>
+          <div className="form-field">
+            <label className="form-label">arrival_from</label>
+            <input type="text" name="arrival_from" value={formData.arrival_from} onChange={handleInputChange} placeholder="arrival from" disabled={isFieldDisabled('arrival_from')} />
+          </div>
+          <div className="form-field">
+            <label className="form-label">port_of_arrival</label>
+            <input type="text" name="port_of_arrival" value={formData.port_of_arrival} onChange={handleInputChange} placeholder="port of arrival" disabled={isFieldDisabled('port_of_arrival')} />
+          </div>
+          <div className="form-field">
+            <label className="form-label">arrival_date</label>
+            <input className="form-input" type="date" name="arrival_date" value={formData.arrival_date} onChange={handleInputChange} disabled={isFieldDisabled('arrival_date')} />
+          </div>
+          <div className="form-field">
+            <label className="form-label">tm6_no</label>
+            <input type="text" name="tm6_no" value={formData.tm6_no} onChange={handleInputChange} placeholder="tm6_no" disabled={isFieldDisabled('tm6_no')} />
           </div>
           <div className="form-field">
             <label className="form-label">90 days report Date</label>
             <input className="form-input" type="date" name="report_90_days_date" value={formData.report_90_days_date} onChange={handleInputChange} disabled={isFieldDisabled('report-date')} />
+          </div>
+          <div className="form-field">
+            <label className="form-label">email</label>
+            <input type="text" name="email" value={formData.email} onChange={handleInputChange} placeholder="email" disabled={isFieldDisabled('email')} />
           </div>
         </div>
         )}
@@ -198,7 +265,7 @@ function Profile({studentId}) {
           </div>
           <div className="form-field">
             <label className="form-label">Sex</label>
-            <select name="sex" value={formData.sex} onChange={handleInputChange} disabled={isFieldDisabled('sex')} >
+            <select name="sex"  value={formData.sex === 'M' ? 'male' : formData.sex === 'F' ? 'female' : ''} onChange={handlesexChange} disabled={isFieldDisabled('sex')} >
             <option value="" >Select Sex</option>
             <option value="male">Male</option>
             <option value="female">Femele</option>
@@ -264,6 +331,7 @@ function Profile({studentId}) {
         <div className="form-actions">
           <button onClick={handleUpdateProfile} disabled={!selectedOption}>Save</button>
         </div>
+        <br></br>
       </div>
 
       {showPopup && <UpdateProfilePopup />} 
